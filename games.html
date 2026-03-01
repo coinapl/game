@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>सभी गेम्स - रॉयल कैसीनो</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/games.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+<!-- नेविगेशन -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container">
+        <a class="navbar-brand" href="index.html">
+            <img src="images/logo.png" alt="रॉयल कैसीनो" height="40">
+            <span class="brand-text">रॉयल कैसीनो</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="index.html">होम</a></li>
+                <li class="nav-item"><a class="nav-link active" href="games.html">गेम्स</a></li>
+                <li class="nav-item"><a class="nav-link" href="promotions.html">ऑफर्स</a></li>
+                <li class="nav-item"><a class="nav-link" href="contact.html">संपर्क</a></li>
+                <li class="nav-item"><a class="nav-link btn btn-gold" href="login.html">लॉगिन</a></li>
+                <li class="nav-item"><a class="nav-link btn btn-outline-gold" href="register.html">रजिस्टर</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- गेम्स हेडर -->
+<section class="games-header py-5">
+    <div class="container">
+        <h1 class="text-center">हमारे सभी गेम्स</h1>
+        <p class="text-center">30+ से ज्यादा शानदार कैसीनो गेम्स</p>
+        
+        <!-- कैटेगरी फिल्टर -->
+        <div class="category-filters text-center mt-4">
+            <button class="filter-btn active" onclick="filterGames('all')">सभी</button>
+            <button class="filter-btn" onclick="filterGames('cards')">कार्ड गेम्स</button>
+            <button class="filter-btn" onclick="filterGames('table')">टेबल गेम्स</button>
+            <button class="filter-btn" onclick="filterGames('slots')">स्लॉट मशीन</button>
+            <button class="filter-btn" onclick="filterGames('instant')">इंस्टेंट गेम्स</button>
+        </div>
+    </div>
+</section>
+
+<!-- गेम्स ग्रिड -->
+<section class="games-grid py-5">
+    <div class="container">
+        <div class="row" id="gamesContainer">
+            <!-- गेम्स डायनामिकली लोड होंगे -->
+        </div>
+    </div>
+</section>
+
+<!-- फुटर -->
+<footer class="footer bg-black text-white py-5">
+    <!-- कॉपी फ्रॉम index.html -->
+</footer>
+
+<script>
+// सभी गेम्स का डेटा
+const gamesData = [
+    // कार्ड गेम्स
+    { id: 1, name: 'ड्रैगन टाइगर', category: 'cards', image: 'dragon-tiger.jpg', players: '1-2', popularity: 95, link: 'games/dragon-tiger.html' },
+    { id: 2, name: 'तीन पत्ती', category: 'cards', image: 'teen-patti.jpg', players: '2-6', popularity: 98, link: 'games/teen-patti.html' },
+    { id: 3, name: 'अंदर बाहर', category: 'cards', image: 'andar-bahar.jpg', players: '1-2', popularity: 90, link: 'games/andar-bahar.html' },
+    { id: 4, name: 'ब्लैकजैक', category: 'cards', image: 'blackjack.jpg', players: '1-7', popularity: 92, link: 'games/blackjack.html' },
+    { id: 5, name: 'बैकारेट', category: 'cards', image: 'baccarat.jpg', players: '1-14', popularity: 88, link: 'games/baccarat.html' },
+    { id: 6, name: 'पोकर', category: 'cards', image: 'poker.jpg', players: '2-10', popularity: 96, link: 'games/poker.html' },
+    { id: 7, name: 'रम्मी', category: 'cards', image: 'rummy.jpg', players: '2-6', popularity: 94, link: 'games/rummy.html' },
+    { id: 8, name: 'वॉर', category: 'cards', image: 'war.jpg', players: '2', popularity: 82, link: 'games/war.html' },
+    { id: 9, name: 'रेड डॉग', category: 'cards', image: 'red-dog.jpg', players: '1-2', popularity: 80, link: 'games/red-dog.html' },
+    { id: 10, name: 'थ्री कार्ड पोकर', category: 'cards', image: 'three-card-poker.jpg', players: '1-2', popularity: 85, link: 'games/three-card-poker.html' },
+    { id: 11, name: 'पाई गो', category: 'cards', image: 'pai-gow.jpg', players: '1-6', popularity: 83, link: 'games/pai-gow.html' },
+    { id: 12, name: 'कैसीनो वॉर', category: 'cards', image: 'casino-war.jpg', players: '1-2', popularity: 81, link: 'games/casino-war.html' },
+    { id: 13, name: 'कैरेबियन स्टड', category: 'cards', image: 'caribbean-stud.jpg', players: '1-2', popularity: 84, link: 'games/caribbean-stud.html' },
+    { id: 14, name: 'टेक्सास होल्डम', category: 'cards', image: 'texas-holdem.jpg', players: '2-10', popularity: 97, link: 'games/texas-holdem.html' },
+    { id: 15, name: 'ओमाहा', category: 'cards', image: 'omaha.jpg', players: '2-10', popularity: 89, link: 'games/omaha.html' },
+    { id: 16, name: 'सेवन कार्ड स्टड', category: 'cards', image: 'seven-card-stud.jpg', players: '2-8', popularity: 86, link: 'games/seven-card-stud.html' },
+    { id: 17, name: 'फाइव कार्ड ड्रॉ', category: 'cards', image: 'five-card-draw.jpg', players: '2-6', popularity: 87, link: 'games/five-card-draw.html' },
+    { id: 18, name: 'वीडियो पोकर', category: 'cards', image: 'video-poker.jpg', players: '1', popularity: 88, link: 'games/video-poker.html' },
+    
+    // टेबल गेम्स
+    { id: 19, name: 'रूलेट', category: 'table', image: 'roulette.jpg', players: '1-8', popularity: 94, link: 'games/roulette.html' },
+    { id: 20, name: 'क्रेप्स', category: 'table', image: 'craps.jpg', players: '2-8', popularity: 86, link: 'games/craps.html' },
+    { id: 21, name: 'सिक बो', category: 'table', image: 'sic-bo.jpg', players: '1-8', popularity: 82, link: 'games/sic-bo.html' },
+    { id: 22, name: 'मछली झींगा केकड़ा', category: 'table', image: 'fish-prawn-crab.jpg', players: '1-8', popularity: 85, link: 'games/fish-prawn-crab.html' },
+    
+    // स्लॉट मशीन
+    { id: 23, name: 'स्लॉट मशीन', category: 'slots', image: 'slots.jpg', players: '1', popularity: 96, link: 'games/slots.html' },
+    { id: 24, name: 'व्हील ऑफ फॉर्च्यून', category: 'slots', image: 'wheel-of-fortune.jpg', players: '1', popularity: 91, link: 'games/wheel-of-fortune.html' },
+    
+    // इंस्टेंट गेम्स
+    { id: 25, name: 'कलर प्रिडिक्शन', category: 'instant', image: 'color-prediction.jpg', players: '1', popularity: 93, link: 'games/color-prediction.html' },
+    { id: 26, name: 'एविएटर', category: 'instant', image: 'aviator.jpg', players: '1', popularity: 95, link: 'games/aviator.html' },
+    { id: 27, name: 'घुड़दौड़', category: 'instant', image: 'horse-racing.jpg', players: '1-8', popularity: 89, link: 'games/horse-racing.html' },
+    { id: 28, name: 'केनो', category: 'instant', image: 'keno.jpg', players: '1', popularity: 84, link: 'games/keno.html' },
+    { id: 29, name: 'लॉटरी', category: 'instant', image: 'lottery.jpg', players: '1-100', popularity: 88, link: 'games/lottery.html' },
+    { id: 30, name: 'बिंगो', category: 'instant', image: 'bingo.jpg', players: '2-20', popularity: 87, link: 'games/bingo.html' }
+];
+
+// गेम्स डिस्प्ले करें
+function displayGames(category = 'all') {
+    const container = document.getElementById('gamesContainer');
+    container.innerHTML = '';
+    
+    const filteredGames = category === 'all' ? gamesData : gamesData.filter(game => game.category === category);
+    
+    filteredGames.forEach(game => {
+        const gameCard = `
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="game-card" data-category="${game.category}">
+                    <img src="images/games/${game.image}" alt="${game.name}" class="img-fluid">
+                    <div class="game-overlay">
+                        <h3>${game.name}</h3>
+                        <p><i class="fas fa-users"></i> ${game.players} खिलाड़ी</p>
+                        <div class="popularity">
+                            <div class="progress">
+                                <div class="progress-bar bg-warning" style="width: ${game.popularity}%"></div>
+                            </div>
+                            <span>${game.popularity}% लोकप्रिय</span>
+                        </div>
+                        <a href="${game.link}" class="btn btn-play mt-3">खेलें <i class="fas fa-play"></i></a>
+                    </div>
+                </div>
+            </div>
+        `;
+        container.innerHTML += gameCard;
+    });
+}
+
+// फिल्टर फंक्शन
+function filterGames(category) {
+    // Active class update
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    
+    // Filter games
+    displayGames(category);
+}
+
+// पेज लोड होने पर सभी गेम्स दिखाएं
+document.addEventListener('DOMContentLoaded', () => {
+    displayGames('all');
+});
+</script>
+
+<style>
+.games-header {
+    background: linear-gradient(135deg, var(--primary-black), var(--secondary-black));
+    border-bottom: 1px solid var(--primary-gold);
+}
+
+.category-filters {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    background: transparent;
+    border: 2px solid var(--primary-gold);
+    color: var(--primary-gold);
+    padding: 10px 25px;
+    border-radius: 30px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+    background: var(--primary-gold);
+    color: var(--primary-black);
+    transform: translateY(-2px);
+}
+
+.game-card {
+    position: relative;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    transition: all 0.3s;
+    height: 250px;
+}
+
+.game-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(255,215,0,0.3);
+}
+
+.game-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: all 0.5s;
+}
+
+.game-card:hover img {
+    transform: scale(1.1);
+}
+
+.game-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.95), rgba(0,0,0,0.7));
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    opacity: 0;
+    transition: all 0.3s;
+}
+
+.game-card:hover .game-overlay {
+    opacity: 1;
+}
+
+.game-overlay h3 {
+    color: var(--primary-gold);
+    margin-bottom: 10px;
+    font-size: 22px;
+}
+
+.game-overlay p {
+    color: white;
+    margin-bottom: 10px;
+}
+
+.popularity {
+    width: 100%;
+    text-align: center;
+}
+
+.popularity .progress {
+    height: 8px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+
+.popularity span {
+    color: var(--primary-gold);
+    font-size: 14px;
+}
+</style>
