@@ -319,4 +319,149 @@ function showNotification(message, type) {
 function clearBets() {
     currentBet = null;
     document.querySelectorAll('.bet-btn').forEach(btn => {
-        btn.classList.remove('active
+        btn.classList.remove('active');
+    });
+    showNotification('बेट क्लियर हो गई', 'info');
+}
+
+// इनिशियलाइज
+updateBalance();
+</script>
+
+<!-- गेम CSS -->
+<style>
+.game-arena {
+    background: linear-gradient(135deg, #1a4d2e, #0f2f1f);
+    border-radius: 20px;
+    padding: 30px;
+    border: 2px solid #FFD700;
+    box-shadow: 0 0 50px rgba(255,215,0,0.2);
+}
+
+.balance-box {
+    background: linear-gradient(45deg, #000, #333);
+    padding: 15px 30px;
+    border-radius: 50px;
+    display: inline-block;
+    border: 1px solid #FFD700;
+}
+
+.balance-box h2 {
+    color: #FFD700;
+    margin: 0;
+    font-size: 32px;
+}
+
+.dragon-card, .tiger-card {
+    width: 200px;
+    height: 280px;
+    background: white;
+    border-radius: 15px;
+    margin: 0 auto;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    border: 2px solid #FFD700;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-value {
+    font-size: 60px;
+    font-weight: bold;
+}
+
+.card-suit {
+    font-size: 80px;
+    margin-top: 10px;
+}
+
+.bet-btn {
+    width: 100%;
+    padding: 20px;
+    border: 2px solid #FFD700;
+    background: linear-gradient(135deg, #333, #000);
+    color: white;
+    border-radius: 15px;
+    font-size: 24px;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.bet-btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(255,215,0,0.3);
+}
+
+.bet-btn.active {
+    background: linear-gradient(135deg, #FFD700, #B8860B);
+    color: black;
+    transform: scale(1.05);
+}
+
+.bet-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+
+.bet-btn:hover::before {
+    left: 100%;
+}
+
+.bet-label {
+    display: block;
+    font-weight: bold;
+}
+
+.bet-odds {
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+.quick-bets {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.quick-bets button {
+    background: transparent;
+    border: 1px solid #FFD700;
+    color: #FFD700;
+    padding: 5px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.quick-bets button:hover {
+    background: #FFD700;
+    color: black;
+}
+
+.history-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background: rgba(255,215,0,0.1);
+    margin-bottom: 5px;
+    border-radius: 5px;
+    border-left: 3px solid #FFD700;
+}
+
+.history-item.dragon { border-left-color: #00ff00; }
+.history-item.tiger { border-left-color: #ff0000; }
+.history-item.tie { border-left-color: #ffff00; }
+
+.profit { color: #00ff00; }
+.loss { color: #ff0000; }
+</style>
