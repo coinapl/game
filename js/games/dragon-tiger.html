@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ड्रैगन टाइगर - रॉयल कैसीनो</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/games.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+<!-- नेविगेशन (वही रखें) -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <!-- कॉपी नेविगेशन from index.html -->
+</nav>
+
+<!-- गेम सेक्शन -->
+<section class="game-section py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <!-- गेम हेडर -->
+                <div class="game-header text-center mb-4">
+                    <h1>ड्रैगन टाइगर</h1>
+                    <p>ड्रैगन या टाइगर, जिसके पास होगा बड़ा कार्ड</p>
+                </div>
+
+                <!-- गेम एरिना -->
+                <div class="game-arena">
+                    <!-- बैलेंस डिस्प्ले -->
+                    <div class="balance-display text-center mb-4">
+                        <div class="balance-box">
+                            <span>आपका बैलेंस:</span>
+                            <h2 id="balance">₹10,000</h2>
+                        </div>
+                    </div>
+
+                    <!-- गेम टेबल -->
+                    <div class="game-table">
+                        <div class="row">
+                            <div class="col-6 text-center">
+                                <div class="dragon-card">
+                                    <div class="card-bg"></div>
+                                    <div class="card-value" id="dragonCard">?</div>
+                                    <div class="card-suit" id="dragonSuit"></div>
+                                </div>
+                                <h3 class="mt-3">🐉 ड्रैगन</h3>
+                            </div>
+                            <div class="col-6 text-center">
+                                <div class="tiger-card">
+                                    <div class="card-bg"></div>
+                                    <div class="card-value" id="tigerCard">?</div>
+                                    <div class="card-suit" id="tigerSuit"></div>
+                                </div>
+                                <h3 class="mt-3">🐯 टाइगर</h3>
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-12 text-center">
+                                <div class="tie-card" id="tieResult"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- बेटिंग ऑप्शन्स -->
+                    <div class="betting-options mt-5">
+                        <h4 class="text-center mb-4">बेट लगाएं</h4>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <button class="bet-btn dragon-bet" onclick="placeBet('dragon')">
+                                    <span class="bet-label">ड्रैगन</span>
+                                    <span class="bet-odds">(1:1)</span>
+                                </button>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <button class="bet-btn tie-bet" onclick="placeBet('tie')">
+                                    <span class="bet-label">टाई</span>
+                                    <span class="bet-odds">(1:8)</span>
+                                </button>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <button class="bet-btn tiger-bet" onclick="placeBet('tiger')">
+                                    <span class="bet-label">टाइगर</span>
+                                    <span class="bet-odds">(1:1)</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- बेट अमाउंट सेलेक्टर -->
+                    <div class="bet-amount-selector mt-4">
+                        <div class="row">
+                            <div class="col-md-6 mx-auto">
+                                <div class="input-group">
+                                    <button class="btn btn-outline-gold" onclick="adjustBet(-100)">-100</button>
+                                    <input type="number" class="form-control text-center" id="betAmount" value="100" min="10" step="10">
+                                    <button class="btn btn-outline-gold" onclick="adjustBet(100)">+100</button>
+                                </div>
+                                <div class="quick-bets mt-2">
+                                    <button onclick="setBet(500)">₹500</button>
+                                    <button onclick="setBet(1000)">₹1000</button>
+                                    <button onclick="setBet(5000)">₹5000</button>
+                                    <button onclick="setBet(10000)">₹10000</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- कंट्रोल बटन्स -->
+                    <div class="game-controls mt-4 text-center">
+                        <button class="btn btn-gold btn-lg" onclick="dealCards()" id="dealBtn">कार्ड डील करें</button>
+                        <button class="btn btn-outline-gold btn-lg" onclick="clearBets()">बेट क्लियर</button>
+                    </div>
+
+                    <!-- रिजल्ट डिस्प्ले -->
+                    <div class="result-display mt-4" id="resultDisplay"></div>
+
+                    <!-- हिस्ट्री टेबल -->
+                    <div class="game-history mt-5">
+                        <h4>पिछले रिजल्ट</h4>
+                        <div class="history-list" id="historyList"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+// गेम वेरिएबल्स
+let balance = 10000;
+let currentBet = null;
+let betAmount = 100;
+let gameHistory = [];
+
+// कार्ड डेटा
+const suits = ['♥', '♦', '♠', '♣'];
+const values = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+
+// बैलेंस अपडेट फंक्शन
+function updateBalance() {
+    document.getElementById('balance').textContent = `₹${balance.toLocaleString()}`;
+}
+
+// बेट प्लेस करें
+function placeBet(betType) {
+    currentBet = betType;
+    
+    // Remove active class from all bet buttons
+    document.querySelectorAll('.bet-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // Add active class to selected bet
+    if(betType === 'dragon') document.querySelector('.dragon-bet').classList.add('active');
+    if(betType === 'tiger') document.querySelector('.tiger-bet').classList.add('active');
+    if(betType === 'tie') document.querySelector('.tie-bet').classList.add('active');
+    
+    // Show notification
+    showNotification(`${betType.toUpperCase()} पर बेट लगाई गई`, 'success');
+}
+
+// बेट अमाउंट एडजस्ट करें
+function adjustBet(amount) {
+    let input = document.getElementById('betAmount');
+    let newValue = parseInt(input.value) + amount;
+    if(newValue >= 10 && newValue <= balance) {
+        input.value = newValue;
+        betAmount = newValue;
+    }
+}
+
+function setBet(amount) {
+    if(amount <= balance) {
+        document.getElementById('betAmount').value = amount;
+        betAmount = amount;
+    } else {
+        showNotification('बैलेंस कम है!', 'error');
+    }
+}
+
+// कार्ड डील करें
+function dealCards() {
+    if(!currentBet) {
+        showNotification('पहले बेट लगाएं!', 'error');
+        return;
+    }
+    
+    if(betAmount > balance) {
+        showNotification('बैलेंस कम है!', 'error');
+        return;
+    }
+    
+    // Deduct bet amount
+    balance -= betAmount;
+    updateBalance();
+    
+    // Generate random cards
+    let dragonCard = generateCard();
+    let tigerCard = generateCard();
+    
+    // Display cards
+    displayCard('dragon', dragonCard);
+    displayCard('tiger', tigerCard);
+    
+    // Determine winner
+    let winner = getWinner(dragonCard, tigerCard);
+    
+    // Calculate winnings
+    let winnings = 0;
+    if(winner === currentBet) {
+        if(winner === 'tie') {
+            winnings = betAmount * 8;
+        } else {
+            winnings = betAmount * 2;
+        }
+        balance += winnings;
+        showNotification(`जीत गए! ₹${winnings - betAmount} मिले!`, 'success');
+    } else {
+        showNotification(`हार गए! ₹${betAmount} का नुकसान`, 'error');
+    }
+    
+    // Update balance
+    updateBalance();
+    
+    // Save to history
+    saveHistory(dragonCard, tigerCard, winner, winnings - betAmount);
+    
+    // Clear bet selection
+    currentBet = null;
+    document.querySelectorAll('.bet-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // Disable deal button temporarily
+    document.getElementById('dealBtn').disabled = true;
+    setTimeout(() => {
+        document.getElementById('dealBtn').disabled = false;
+    }, 2000);
+}
+
+// कार्ड जेनरेट करें
+function generateCard() {
+    let suit = suits[Math.floor(Math.random() * suits.length)];
+    let value = values[Math.floor(Math.random() * values.length)];
+    return { suit, value };
+}
+
+// कार्ड डिस्प्ले करें
+function displayCard(player, card) {
+    let valueEl = document.getElementById(`${player}Card`);
+    let suitEl = document.getElementById(`${player}Suit`);
+    
+    valueEl.textContent = card.value;
+    suitEl.textContent = card.suit;
+    
+    // Set color based on suit
+    if(card.suit === '♥' || card.suit === '♦') {
+        valueEl.style.color = 'red';
+        suitEl.style.color = 'red';
+    } else {
+        valueEl.style.color = 'black';
+        suitEl.style.color = 'black';
+    }
+}
+
+// विनर डिटरमाइन करें
+function getWinner(dragon, tiger) {
+    let dragonValue = values.indexOf(dragon.value);
+    let tigerValue = values.indexOf(tiger.value);
+    
+    if(dragonValue > tigerValue) return 'dragon';
+    if(tigerValue > dragonValue) return 'tiger';
+    return 'tie';
+}
+
+// हिस्ट्री सेव करें
+function saveHistory(dragon, tiger, winner, profit) {
+    let history = {
+        dragon: dragon.value + dragon.suit,
+        tiger: tiger.value + tiger.suit,
+        winner: winner,
+        profit: profit,
+        time: new Date().toLocaleTimeString()
+    };
+    
+    gameHistory.unshift(history);
+    if(gameHistory.length > 10) gameHistory.pop();
+    
+    displayHistory();
+}
+
+// हिस्ट्री डिस्प्ले करें
+function displayHistory() {
+    let html = '';
+    gameHistory.forEach(game => {
+        html += `<div class="history-item ${game.winner}">
+            <span>${game.dragon} vs ${game.tiger}</span>
+            <span>विजेता: ${game.winner}</span>
+            <span class="${game.profit > 0 ? 'profit' : 'loss'}">${game.profit > 0 ? '+' : ''}${game.profit}</span>
+            <span>${game.time}</span>
+        </div>`;
+    });
+    document.getElementById('historyList').innerHTML = html || '<p>कोई हिस्ट्री नहीं</p>';
+}
+
+// नोटिफिकेशन शो करें
+function showNotification(message, type) {
+    let resultDiv = document.getElementById('resultDisplay');
+    resultDiv.innerHTML = `<div class="alert alert-${type === 'success' ? 'success' : 'danger'}">${message}</div>`;
+    setTimeout(() => {
+        resultDiv.innerHTML = '';
+    }, 3000);
+}
+
+// बेट क्लियर करें
+function clearBets() {
+    currentBet = null;
+    document.querySelectorAll('.bet-btn').forEach(btn => {
+        btn.classList.remove('active
